@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<!-- Header Banner -->
+<div class="card card-custom p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1 text-white"><i class="fa-solid fa-chart-simple text-info me-2"></i>Acoustic Signal Processing Workbench</h2>
+            <p class="text-secondary mb-0">An advanced laboratory-grade tool for Time Domain, Fast Fourier Transform (FFT), and Spectrogram Signal Analysis.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <span class="badge bg-dark border border-secondary p-2"><i class="fa-brands fa-python text-warning me-1"></i> NumPy & SciPy Engine</span>
+            <span class="badge bg-dark border border-secondary p-2"><i class="fa-solid fa-graduation-cap text-info me-1"></i> CS50 ECE Project</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Left Panel: Control & Upload -->
+    <div class="col-lg-4">
+        <div class="card card-custom p-4 mb-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-file-arrow-up text-info me-2"></i>Upload Signal File</h5>
+            <form action="/" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label text-secondary small">Select an uncompressed WAV audio file:</label>
+                    <input class="form-control bg-dark text-white border-secondary" type="file" name="file" accept=".wav" required>
+                </div>
+                <button type="submit" class="btn btn-neon w-100 py-2 fs-6">
+                    <i class="fa-solid fa-bolt me-2"></i>Execute DSP Pipeline
+                </button>
+            </form>
+        </div>
+
+        {% if results %}
+        <!-- Built-in Audio Player -->
+        <div class="card card-custom p-4 mb-4">
+            <h6 class="fw-bold text-white mb-3"><i class="fa-solid fa-circle-play text-success me-2"></i>Audio Playback Control</h6>
+            <audio controls class="w-100">
+                <source src="{{ url_for('static', filename=audio_url) }}" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        {% endif %}
+
+        <!-- Quick Reference Guide -->
+        <div class="card card-custom p-4">
+            <h6 class="fw-bold text-warning mb-2"><i class="fa-solid fa-book-bookmark me-2"></i>DSP Metrics Guide</h6>
+            <ul class="list-unstyled text-secondary small mb-0">
+                <li class="mb-2"><strong class="text-info">FFT Peak:</strong> The dominant frequency component in Hz.</li>
+                <li class="mb-2"><strong class="text-info">RMS Energy:</strong> Root Mean Square amplitude level.</li>
+                <li class="mb-2"><strong class="text-info">Spectrogram:</strong> Time vs Frequency vs Energy Heatmap.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right Panel: Visualizations & Output -->
+    <div class="col-lg-8">
+        {% if results %}
+        <div class="card card-custom p-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25 pb-3 mb-4">
+                <h5 class="fw-bold text-white mb-0"><i class="fa-solid fa-microchip me-2 text-info"></i>Analysis Report: <span class="text-info">{{ filename }}</span></h5>
+                <span class="badge bg-success bg-opacity-25 text-success border border-success px-3 py-2"><i class="fa-solid fa-circle-check me-1"></i> Processed</span>
+            </div>
+
+            <!-- DSP Metrics Grid -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 text-center">
+                        <small class="text-secondary fw-semibold d-block">DURATION</small>
+                        <span class="fs-4 fw-bold text-white">{{ results.duration }}s</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 text-center">
+                        <small class="text-secondary fw-semibold d-block">SAMPLING RATE</small>
+                        <span class="fs-4 fw-bold text-white">{{ results.sample_rate }} <small class="fs-6 text-secondary">Hz</small></span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 text-center">
+                        <small class="text-secondary fw-semibold d-block">PEAK FREQ</small>
+                        <span class="fs-4 fw-bold text-info">{{ results.dominant_freq }} <small class="fs-6 text-info">Hz</small></span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="metric-card p-3 text-center">
+                        <small class="text-secondary fw-semibold d-block">RMS ENERGY</small>
+                        <span class="fs-4 fw-bold text-warning">{{ results.rms_energy }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plots Display -->
+            <div class="d-flex flex-column gap-4">
+                <div>
+                    <h6 class="fw-bold text-info mb-2"><i class="fa-solid fa-wave-square me-2"></i>1. Time Domain Waveform</h6>
+                    <img src="{{ url_for('static', filename=results.waveform_img) }}" class="img-fluid rounded border border-secondary border-opacity-25 w-100" alt="Waveform">
+                </div>
+
+                <div>
+                    <h6 class="fw-bold text-danger mb-2"><i class="fa-solid fa-chart-line me-2"></i>2. Fast Fourier Transform (FFT) Spectrum</h6>
+                    <img src="{{ url_for('static', filename=results.fft_img) }}" class="img-fluid rounded border border-secondary border-opacity-25 w-100" alt="FFT Spectrum">
+                </div>
+
+                <div>
+                    <h6 class="fw-bold text-warning mb-2"><i class="fa-solid fa-fire me-2"></i>3. Time-Frequency Spectrogram</h6>
+                    <img src="{{ url_for('static', filename=results.spectrogram_img) }}" class="img-fluid rounded border border-secondary border-opacity-25 w-100" alt="Spectrogram">
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="card card-custom text-center p-5">
+            <div class="my-5">
+                <i class="fa-solid fa-sliders text-secondary display-1 mb-3"></i>
+                <h4 class="fw-bold text-white">No Audio Signal Loaded</h4>
+                <p class="text-secondary">Upload a <code>.wav</code> audio file from the control panel to initialize the DSP analysis engine.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignalLab - ECE Audio & DSP Processing Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Dark Aesthetics -->
+    <style>
+        body {
+            background-color: #090d16;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-custom {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .metric-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        .btn-neon {
+            background: linear-gradient(135deg, #00f2fe 0%, #00c6ff 100%);
+            color: #000;
+            font-weight: 700;
+            border: none;
+        }
+        .btn-neon:hover {
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary border-opacity-25 bg-dark bg-opacity-50 mb-4">
+    <div class="container">
+        <a class="navbar-brand fs-4" href="/"><i class="fa-solid fa-wave-square me-2"></i>SignalLab</a>
+        <span class="navbar-text text-muted small">CS50 Final Project | Audio Signal Analyzer</span>
+    </div>
+</nav>
+
+    <div class="container mb-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mb-4" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block main %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.bundle.min.js"></script>
+</body>
+</html>
